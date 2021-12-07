@@ -3,6 +3,6 @@ export class UserInfoDto {
     id: string;
     login: string;
     aboutMe?: string;
-    avatar?: ArrayBuffer;
+    avatar?: string;
     wasOnline: string;
 }
