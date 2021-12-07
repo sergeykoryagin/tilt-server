@@ -87,12 +87,27 @@ export class UsersService {
         return null;
     }
 
+    async updateUserAvatar(avatar: Express.Multer.File, userId: string) {
+        if (!userId) {
+            throw new UnauthorizedException();
+        }
+        const user = await this.userRepository.findOne(userId);
+        if (!user) {
+            throw new UnauthorizedException();
+        }
+        user.avatar = avatar.buffer;
+        return await this.userRepository.save(user);
+    }
+
     private static buildUserInfoDto(user: User): UserInfoDto {
         if (!user) {
             return null;
         }
-        const { password, currentHashedRefreshToken, chats, ...userInfoDto } = user;
-        return userInfoDto;
+        const { password, currentHashedRefreshToken, chats, avatar, ...userInfoDto } = user;
+        return {
+            ...userInfoDto,
+            avatar: avatar && Buffer.from(avatar).toString('base64'),
+        };
     };
 
 }
