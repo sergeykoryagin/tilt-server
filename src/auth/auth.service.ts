@@ -50,7 +50,6 @@ export class AuthService {
         try {
             tokenPayload = this.jwtService.verify<TokenPayload>(refreshToken,{
                 secret: process.env.JWT_REFRESH_TOKEN_SECRET,
-                ignoreExpiration: false,
                 maxAge: process.env.JWT_REFRESH_TOKEN_EXPIRATION_TIME,
             });
         } catch {
@@ -67,6 +66,14 @@ export class AuthService {
 
         const tokenPair = AuthService.buildTokenPair(accessToken, newRefreshToken);
         return AuthService.buildAuthResponseDto(tokenPair, user);
+    };
+
+    async signOut(userId: string): Promise<void> {
+        const user = this.usersService.findById(userId);
+        if (!user) {
+            throw new BadRequestException('Invalid token');
+        }
+        await this.usersService.setCurrentRefreshToken(null, userId);
     };
 
     private createAccessToken(userId: string, login: string): string {

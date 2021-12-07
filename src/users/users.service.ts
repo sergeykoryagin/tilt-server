@@ -1,10 +1,11 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
+import { Pagination } from 'src/interfaces/pagination';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UserInfoDto } from 'src/users/dto/user-info.dto';
 import { User } from 'src/users/users.model';
-import * as bcrypt from 'bcrypt';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
@@ -32,12 +33,35 @@ export class UsersService {
         return UsersService.buildUserInfoDto(user);
     }
 
-    async setCurrentRefreshToken(refreshToken: string, userId: string): Promise<void> {
-        const currentHashedRefreshToken = bcrypt.hashSync(refreshToken, 10);
+    async getUserEntityById(userId: string): Promise<User | undefined> {
+        return await this.userRepository.findOne(userId);
+    }
+
+    async setCurrentRefreshToken(refreshToken: string | null, userId: string): Promise<void> {
+        const currentHashedRefreshToken = refreshToken && bcrypt.hashSync(refreshToken, 10);
         await this.userRepository.update(userId, {
             currentHashedRefreshToken
         });
     }
+
+    async searchUsers(userId: string, searchString: string, pagination: Pagination): Promise<UserInfoDto[]> {
+        const users = await this.userRepository.createQueryBuilder('users')
+            .where(
+                `users.id != '${userId}' and LOWER(users.login) LIKE :searchString`,
+                {searchString: `%${searchString.toLowerCase()}%`}
+            )
+            .offset((pagination.pageNumber - 1) * pagination.pageSize)
+            .take(pagination.pageSize)
+            .getMany();
+        return users.map(UsersService.buildUserInfoDto);
+    }
+
+    async setDisconnectionTime(userId: string): Promise<void> {
+        const user = await this.userRepository.findOne(userId);
+        console.log(new Date().getHours());
+        user.wasOnline = new Date().toISOString();
+        await this.userRepository.save(user);
+    };
 
     async validateUserPassword(login: string, password: string): Promise<UserInfoDto> {
         const user = await this.userRepository.findOne({ login });
@@ -67,7 +91,7 @@ export class UsersService {
         if (!user) {
             return null;
         }
-        const { password, currentHashedRefreshToken, ...userInfoDto } = user;
+        const { password, currentHashedRefreshToken, chats, ...userInfoDto } = user;
         return userInfoDto;
     };
 
