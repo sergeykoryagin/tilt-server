@@ -1,5 +1,6 @@
-import { Exclude } from 'class-transformer';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Chat } from 'src/chats/chats.model';
+import { Message } from 'src/messages/messages.model';
+import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({
     name: 'users',
@@ -17,12 +18,6 @@ export class User {
     @Column({ type: 'varchar', nullable: true })
     aboutMe?: string;
 
-    @Column({ type: Boolean, nullable: false, default: false })
-    isOnline: boolean;
-
-    @Column({ type: Boolean, nullable: false, default: false })
-    isSmiling: boolean;
-
     @Column({ type: 'bytea', nullable: true })
     avatar?: ArrayBuffer;
 
@@ -30,6 +25,11 @@ export class User {
     wasOnline: string;
 
     @Column({ type: String, nullable: true, length: 120 })
-    @Exclude()
     currentHashedRefreshToken?: string;
+
+    @ManyToMany(() => Chat, (chat: Chat) => chat.members)
+    chats: Chat[];
+
+    @OneToMany(() => Message, (message) => message.user)
+    messages: Message[]
 }

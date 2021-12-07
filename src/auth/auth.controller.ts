@@ -1,7 +1,8 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
 import { AuthCredentialsDto } from 'src/auth/dto/auth-credentials.dto';
 import { AuthResponseDto } from 'src/auth/dto/auth-response.dto';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -20,5 +21,11 @@ export class AuthController {
     @Post('auth-me')
     async authMe(@Body('refreshToken') refreshToken: string): Promise<AuthResponseDto> {
         return this.authService.authMe(refreshToken);
+    }
+
+    @Delete('sign-out')
+    @UseGuards(JwtAuthGuard)
+    async signOut(@Request() request): Promise<void> {
+        return this.authService.signOut(request.userId);
     }
 }
