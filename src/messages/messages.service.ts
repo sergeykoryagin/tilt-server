@@ -42,6 +42,14 @@ export class MessagesService {
         return messages.map(MessagesService.buildMessageDto);
     }
 
+    async getChatIdByMessageId(messageId: string): Promise<string> {
+        const query = `select "chatId" from messages m
+                        join chats c on m."chatId" = c.id
+                        where m.id = ${messageId}}`;
+        const chatId: { chatId }[] = await this.messageRepository.query(query);
+        return chatId[0]?.chatId;
+    }
+
     private static buildMessageDto = (message: Message): MessageDto => {
         const { user, chat, ...messageInfo } = message;
         return {
