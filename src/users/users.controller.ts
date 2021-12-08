@@ -1,6 +1,7 @@
 import {
     Body,
     Controller,
+    Delete,
     Get,
     Post,
     Put,
@@ -44,12 +45,18 @@ export class UsersController {
     }
 
     @Put('avatar')
-    @UseInterceptors(FileInterceptor('photo'))
+    @UseInterceptors(FileInterceptor('avatar'))
     @UseGuards(JwtAuthGuard)
     updateUserAvatar(
-        @UploadedFile() photo: Express.Multer.File,
+        @UploadedFile() avatar: Express.Multer.File,
         @Request() request,
     ) {
-        return this.usersService.updateUserAvatar(photo, request.userId);
+        return this.usersService.updateUserAvatar(avatar, request.userId);
+    }
+
+    @Delete('avatar')
+    @UseGuards(JwtAuthGuard)
+    deleteUserAvatar(@Request() request) {
+        return this.usersService.deleteUserAvatar(request.userId);
     }
 }
