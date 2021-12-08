@@ -96,7 +96,19 @@ export class UsersService {
             throw new UnauthorizedException();
         }
         user.avatar = avatar.buffer;
-        return await this.userRepository.save(user);
+        return UsersService.buildUserInfoDto(await this.userRepository.save(user));
+    }
+
+    async deleteUserAvatar(userId) {
+        if (!userId) {
+            throw new UnauthorizedException();
+        }
+        const user = await this.userRepository.findOne(userId);
+        if (!user) {
+            throw new UnauthorizedException();
+        }
+        user.avatar = null;
+        return UsersService.buildUserInfoDto(await this.userRepository.save(user));
     }
 
     private static buildUserInfoDto(user: User): UserInfoDto {
