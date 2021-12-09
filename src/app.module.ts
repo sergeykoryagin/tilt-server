@@ -15,7 +15,7 @@ import { MessagesModule } from './messages/messages.module';
         ConfigModule.forRoot(),
         TypeOrmModule.forRoot({
             type: 'postgres',
-            url: `postgres://awurgvpchejrdm:ff8159ed1b2b77d36490f31d5350785a80b6325d0517954b3bb05b9ff84656b8@ec2-54-225-190-241.compute-1.amazonaws.com:5432/d39gnnc50403g7`,
+            url: process.env.DATABASE_URL,
             // host: process.env.POSTGRES_HOST,
             // port: +process.env.POSTGRES_PORT,
             // username: process.env.POSTGRES_USERNAME,
