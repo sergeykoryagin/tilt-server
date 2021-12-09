@@ -76,6 +76,10 @@ export class AuthService {
         await this.usersService.setCurrentRefreshToken(null, userId);
     };
 
+    async updatePassword(userId: string, password: string): Promise<void> {
+        await this.usersService.updateUserPassword(userId, password);
+    }
+
     private createAccessToken(userId: string, login: string): string {
         const payload: TokenPayload = { userId, login };
         return this.jwtService.sign(payload, {
