@@ -1,12 +1,12 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
-import { Pagination } from 'src/interfaces/pagination';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { DataSendPermissionsDto } from 'src/users/dto/data-send-permissions-dto';
-import { UpdateUserDto } from 'src/users/dto/update-user-dto';
-import { UserInfoDto } from 'src/users/dto/user-info.dto';
-import { User } from 'src/users/users.model';
+import { Pagination } from '../interfaces/pagination';
+import { CreateUserDto } from './dto/create-user.dto';
+import { DataSendPermissionsDto } from './dto/data-send-permissions-dto';
+import { UpdateUserDto } from './dto/update-user-dto';
+import { UserInfoDto } from './dto/user-info.dto';
+import { User } from './users.model';
 import { Repository } from 'typeorm';
 
 @Injectable()

@@ -1,5 +1,5 @@
-import { TokenPairDto } from 'src/auth/dto/token-pair.dto';
-import { UserInfoDto } from 'src/users/dto/user-info.dto';
+import { TokenPairDto } from './token-pair.dto';
+import { UserInfoDto } from '../../users/dto/user-info.dto';
 
 export class AuthResponseDto {
     tokenPair: TokenPairDto;

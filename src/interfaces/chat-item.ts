@@ -1,4 +1,4 @@
-import { MessageDto } from 'src/messages/dto/message-dto';
+import { MessageDto } from '../messages/dto/message-dto';
 
 export interface ChatItem {
     userId: string;

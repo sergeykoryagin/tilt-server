@@ -1,5 +1,5 @@
-import { Chat } from 'src/chats/chats.model';
-import { User } from 'src/users/users.model';
+import { Chat } from '../chats/chats.model';
+import { User } from '../users/users.model';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({

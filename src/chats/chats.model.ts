@@ -1,5 +1,5 @@
-import { Message } from 'src/messages/messages.model';
-import { User } from 'src/users/users.model';
+import { Message } from '../messages/messages.model';
+import { User } from '../users/users.model';
 import { Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({

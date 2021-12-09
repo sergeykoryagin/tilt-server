@@ -12,12 +12,12 @@ import {
     UseInterceptors
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { DataSendPermissionsDto } from 'src/users/dto/data-send-permissions-dto';
-import { UpdateUserDto } from 'src/users/dto/update-user-dto';
-import { UserInfoDto } from 'src/users/dto/user-info.dto';
-import { UsersService } from 'src/users/users.service';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { CreateUserDto } from './dto/create-user.dto';
+import { DataSendPermissionsDto } from './dto/data-send-permissions-dto';
+import { UpdateUserDto } from './dto/update-user-dto';
+import { UserInfoDto } from './dto/user-info.dto';
+import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {

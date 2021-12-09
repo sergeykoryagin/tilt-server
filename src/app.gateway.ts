@@ -7,12 +7,12 @@ import {
 } from '@nestjs/websockets';
 import { debounce } from 'lodash';
 import { Server, Socket } from 'socket.io';
-import { Chat } from 'src/chats/chats.model';
-import { ChatsService } from 'src/chats/chats.service';
-import { MessageInfo } from 'src/interfaces/message-info';
-import { OnlineUser } from 'src/interfaces/online-user';
-import { MessagesService } from 'src/messages/messages.service';
-import { UsersService } from 'src/users/users.service';
+import { Chat } from './chats/chats.model';
+import { ChatsService } from './chats/chats.service';
+import { MessageInfo } from './interfaces/message-info';
+import { OnlineUser } from './interfaces/online-user';
+import { MessagesService } from './messages/messages.service';
+import { UsersService } from './users/users.service';
 
 @WebSocketGateway(80)
 export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {

@@ -1,11 +1,11 @@
 import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { AuthCredentialsDto } from 'src/auth/dto/auth-credentials.dto';
-import { AuthResponseDto } from 'src/auth/dto/auth-response.dto';
-import { TokenPairDto } from 'src/auth/dto/token-pair.dto';
-import { TokenPayload } from 'src/auth/interfaces/token-payload';
-import { UserInfoDto } from 'src/users/dto/user-info.dto';
-import { UsersService } from 'src/users/users.service';
+import { AuthCredentialsDto } from './dto/auth-credentials.dto';
+import { AuthResponseDto } from './dto/auth-response.dto';
+import { TokenPairDto } from './dto/token-pair.dto';
+import { TokenPayload } from './interfaces/token-payload';
+import { UserInfoDto } from '../users/dto/user-info.dto';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class AuthService {

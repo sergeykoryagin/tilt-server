@@ -1,9 +1,9 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AuthModule } from 'src/auth/auth.module';
-import { User } from 'src/users/users.model';
-import { UsersService } from 'src/users/users.service';
-import { UsersController } from 'src/users/users.controller';
+import { AuthModule } from '../auth/auth.module';
+import { User } from './users.model';
+import { UsersService } from './users.service';
+import { UsersController } from './users.controller';
 
 @Module({
     providers: [UsersService],

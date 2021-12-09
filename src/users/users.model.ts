@@ -1,5 +1,5 @@
-import { Chat } from 'src/chats/chats.model';
-import { Message } from 'src/messages/messages.model';
+import { Chat } from '../chats/chats.model';
+import { Message } from '../messages/messages.model';
 import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({

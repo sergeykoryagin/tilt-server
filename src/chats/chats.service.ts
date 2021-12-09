@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Chat } from 'src/chats/chats.model';
-import { User } from 'src/users/users.model';
-import { UsersService } from 'src/users/users.service';
+import { Chat } from './chats.model';
+import { User } from '../users/users.model';
+import { UsersService } from '../users/users.service';
 import { Repository } from 'typeorm';
 
 @Injectable()

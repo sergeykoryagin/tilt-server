@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { ChatsService } from 'src/chats/chats.service';
-import { MessageInfo } from 'src/interfaces/message-info';
-import { MessageDto } from 'src/messages/dto/message-dto';
-import { Message } from 'src/messages/messages.model';
-import { UsersService } from 'src/users/users.service';
+import { ChatsService } from '../chats/chats.service';
+import { MessageInfo } from '../interfaces/message-info';
+import { MessageDto } from './dto/message-dto';
+import { Message } from './messages.model';
+import { UsersService } from '../users/users.service';
 import { Repository } from 'typeorm';
 
 @Injectable()
