@@ -30,7 +30,7 @@ export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGateway
     ) {};
 
     afterInit(server: any): void {
-        this.logger.log('Initialized!');
+        this.logger.log(`AppGateway initialized on port ${process.env.WS_PORT}`);
     };
 
     handleConnection(client: Socket): void {
