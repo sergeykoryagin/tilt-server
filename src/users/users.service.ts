@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { Pagination } from 'src/interfaces/pagination';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { DataSendPermissionsDto } from 'src/users/dto/data-send-permissions-dto';
+import { UpdateUserDto } from 'src/users/dto/update-user-dto';
 import { UserInfoDto } from 'src/users/dto/user-info.dto';
 import { User } from 'src/users/users.model';
 import { Repository } from 'typeorm';
@@ -58,7 +60,6 @@ export class UsersService {
 
     async setDisconnectionTime(userId: string): Promise<void> {
         const user = await this.userRepository.findOne(userId);
-        console.log(new Date().getHours());
         user.wasOnline = new Date().toISOString();
         await this.userRepository.save(user);
     };
@@ -87,19 +88,32 @@ export class UsersService {
         return null;
     }
 
-    async updateUserAvatar(avatar: Express.Multer.File, userId: string) {
+    async updateUserAvatar(avatar: Express.Multer.File, userId: string): Promise<UserInfoDto> {
         if (!userId) {
             throw new UnauthorizedException();
         }
         const user = await this.userRepository.findOne(userId);
         if (!user) {
-            throw new UnauthorizedException();
+            throw new BadRequestException();
         }
         user.avatar = avatar.buffer;
         return UsersService.buildUserInfoDto(await this.userRepository.save(user));
     }
 
-    async deleteUserAvatar(userId) {
+    async updateUser(userId: string, updateUserDto: UpdateUserDto): Promise<UserInfoDto> {
+        if (!userId) {
+            throw new UnauthorizedException();
+        }
+        const user = await this.userRepository.findOne(userId);
+        if (!user) {
+            throw new BadRequestException();
+        }
+        user.login = updateUserDto.login;
+        user.aboutMe = updateUserDto.aboutMe;
+        return UsersService.buildUserInfoDto(await this.userRepository.save(user));
+    };
+
+    async deleteUserAvatar(userId: string) {
         if (!userId) {
             throw new UnauthorizedException();
         }
@@ -109,6 +123,44 @@ export class UsersService {
         }
         user.avatar = null;
         return UsersService.buildUserInfoDto(await this.userRepository.save(user));
+    }
+
+    async getDataSendPermissions(userId: string): Promise<DataSendPermissionsDto> {
+        if(!userId) {
+            throw new UnauthorizedException();
+        }
+        const user = await this.userRepository.findOne(userId);
+        if (!user) {
+            throw new UnauthorizedException();
+        }
+        const { hasDataSendPermissions } = user;
+        await this.userRepository.save(user);
+        return { hasDataSendPermissions };
+    };
+
+    async updateDataSendPermissions(userId: string, hasDataSendPermissions: boolean): Promise<DataSendPermissionsDto> {
+        if(!userId) {
+            throw new UnauthorizedException();
+        }
+        const user = await this.userRepository.findOne(userId);
+        if (!user) {
+            throw new UnauthorizedException();
+        }
+        user.hasDataSendPermissions = hasDataSendPermissions;
+        await this.userRepository.save(user);
+        return { hasDataSendPermissions };
+    };
+
+    async updateUserPassword(userId: string, password: string): Promise<void> {
+        if(!userId) {
+            throw new UnauthorizedException();
+        }
+        const user = await this.userRepository.findOne(userId);
+        if (!user) {
+            throw new UnauthorizedException();
+        }
+        user.password = bcrypt.hashSync(password, 10);
+        await this.userRepository.save(user);
     }
 
     private static buildUserInfoDto(user: User): UserInfoDto {

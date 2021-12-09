@@ -14,6 +14,8 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { DataSendPermissionsDto } from 'src/users/dto/data-send-permissions-dto';
+import { UpdateUserDto } from 'src/users/dto/update-user-dto';
 import { UserInfoDto } from 'src/users/dto/user-info.dto';
 import { UsersService } from 'src/users/users.service';
 
@@ -32,6 +34,12 @@ export class UsersController {
         return this.usersService.createUser(createUserDto);
     };
 
+    @Put()
+    @UseGuards(JwtAuthGuard)
+    async updateUser(@Body() updateUserDto: UpdateUserDto, @Request() request) {
+        return this.usersService.updateUser(request.userId, updateUserDto);
+    };
+
     @Get('search')
     @UseGuards(JwtAuthGuard)
     async searchUsers(
@@ -40,7 +48,6 @@ export class UsersController {
         @Query('searchString') searchString: string,
         @Request() request
     ): Promise<UserInfoDto[]> {
-        console.log(request.userId);
         return this.usersService.searchUsers(request.userId, searchString,{ pageNumber: +pageNumber, pageSize: +pageSize });
     }
 
@@ -59,4 +66,18 @@ export class UsersController {
     deleteUserAvatar(@Request() request) {
         return this.usersService.deleteUserAvatar(request.userId);
     }
+
+    @Get('permissions')
+    @UseGuards(JwtAuthGuard)
+    getDataSendPermissions(@Request() request) {
+        return this.usersService.getDataSendPermissions(request.userId);
+    }
+
+    @Put('permissions')
+    @UseGuards(JwtAuthGuard)
+    updateDataSendPermissions(@Body() dataSendPermissionsDto: DataSendPermissionsDto, @Request() request) {
+        return this.usersService.updateDataSendPermissions(request.userId, dataSendPermissionsDto.hasDataSendPermissions);
+    }
+
+
 }

@@ -15,7 +15,7 @@ export class User {
     @Column({ type: 'varchar', nullable: false })
     password: string;
 
-    @Column({ type: 'varchar', nullable: true })
+    @Column({ type: 'varchar', nullable: true, length: 64 })
     aboutMe?: string;
 
     @Column({ type: 'bytea', nullable: true })
@@ -26,6 +26,9 @@ export class User {
 
     @Column({ type: String, nullable: true, length: 120 })
     currentHashedRefreshToken?: string;
+
+    @Column({ type: Boolean, nullable: false, default: false })
+    hasDataSendPermissions: boolean;
 
     @ManyToMany(() => Chat, (chat: Chat) => chat.members)
     chats: Chat[];
