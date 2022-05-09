@@ -1,0 +1,22 @@
+version: "3"
+services:
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "4001:4001"
+    volumes:
+      - ./.env:/opt/app/.env
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:14-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: "tilt"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+    restart: always

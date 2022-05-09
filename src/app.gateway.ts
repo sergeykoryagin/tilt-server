@@ -14,7 +14,7 @@ import { OnlineUser } from './interfaces/online-user';
 import { MessagesService } from './messages/messages.service';
 import { UsersService } from './users/users.service';
 
-@WebSocketGateway()
+@WebSocketGateway(80)
 export class AppGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
     @WebSocketServer() server: Server;
     private logger: Logger = new Logger('AppGateway');
