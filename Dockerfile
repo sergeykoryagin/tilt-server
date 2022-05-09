@@ -1,6 +1,7 @@
 FROM node:14-alpine
 WORKDIR /opt/app
-ADD . .
-RUN yarn install --prod
+COPY package.json .
+RUN yarn install
+COPY . .
 RUN yarn build
 CMD ["yarn", "start:prod"]
