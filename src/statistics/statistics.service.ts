@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Message } from 'src/messages/messages.model';
+import { Message } from '../messages/messages.model';
 import { Repository } from 'typeorm';
 
 @Injectable()

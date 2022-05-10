@@ -2,7 +2,7 @@ import { Controller, Get } from '@nestjs/common';
 
 @Controller('statistics')
 export class StatisticsController {
-    @Get()
+    @Get('kek')
     async getStatistics() {
         return 'statitics';
     }

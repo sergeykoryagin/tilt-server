@@ -27,4 +27,6 @@ jobs:
         USERNAME: ${{ secrets.USERNAME }}
         PORT: ${{ secrets.PORT }}
         KEY: ${{ secrets.SSH_KEY }}
-        script: cd /root/tilt-server && /usr/local/bin/docker-compose --profile prod up -d
+        script: | 
+          cd /root/tilt-server &&
+          /usr/local/bin/docker-compose --profile prod up -d --no-deps --build api
