@@ -4,6 +4,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: api
+    restart: always
+    profiles:
+      - prod
     ports:
       - "4001:4001"
       - "16000:16000"
@@ -15,8 +19,32 @@ services:
     depends_on:
       - postgres
 
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    restart: always
+    container_name: dev
+    profiles:
+      - dev
+    ports:
+      - "4001:4001"
+      - "16000:16000"
+    expose:
+      - 4001
+      - 16000
+    volumes:
+      - ./.env:/app/.env
+      - ./src:/app/src/
+    depends_on:
+      - postgres
+
   postgres:
     image: postgres:14-alpine
+    container_name: postgres
+    profiles:
+      - dev
+      - prod
     ports:
       - "5432:5432"
     expose:

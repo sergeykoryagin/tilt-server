@@ -1,6 +1,9 @@
-FROM node:14-alpine
-WORKDIR /opt/app
-ADD
-RUN yarn install --prod
+FROM node:16-alpine
+WORKDIR /app
+COPY package.json ./
+COPY yarn.lock ./
+RUN yarn install
+COPY . .
+COPY ./dist ./dist
 RUN yarn build
-CMD ["yarn", "start:prod"]
+CMD ["yarn", "run", "start:dev"]

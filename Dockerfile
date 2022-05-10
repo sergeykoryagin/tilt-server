@@ -1,5 +1,5 @@
 FROM node:14-alpine
-WORKDIR /opt/app
+WORKDIR /app
 COPY package.json .
 RUN yarn install
 COPY . .
