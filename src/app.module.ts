@@ -9,6 +9,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { ChatsModule } from './chats/chats.module';
 import { MessagesModule } from './messages/messages.module';
+import { StatisticsModule } from './statistics/statistics.module';
 
 @Module({
     imports: [
@@ -24,6 +25,7 @@ import { MessagesModule } from './messages/messages.module';
         AuthModule,
         forwardRef(() => ChatsModule),
         MessagesModule,
+        StatisticsModule,
     ],
     exports: [
         ConfigModule,
