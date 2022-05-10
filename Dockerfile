@@ -1,6 +1,7 @@
-FROM node:14-alpine
+FROM node:16-alpine as build
 WORKDIR /app
-COPY package.json .
+COPY package.json ./
+COPY yarn.lock ./
 RUN yarn install
 COPY . .
 RUN yarn build

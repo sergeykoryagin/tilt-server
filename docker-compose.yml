@@ -15,7 +15,7 @@ services:
       - 4001
       - 16000
     volumes:
-      - ./.env:/opt/app/.env
+      - ./.env:/app/.env
     depends_on:
       - postgres
 
