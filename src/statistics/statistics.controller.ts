@@ -1,12 +1,15 @@
 import { Controller, Get, Request, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { StatisticsService } from './statistics.service';
 
 @Controller('statistics')
 export class StatisticsController {
+    constructor(private statisticsService: StatisticsService) {}
+
     @Get('today')
     @UseGuards(JwtAuthGuard)
     async getTodayStatistics(@Request() request) {
-        return `today statistics for ${request.userId}`;
+        return this.statisticsService.getTodayStatistics(request.userId);
     }
 
     @Get('month')
@@ -23,7 +26,7 @@ export class StatisticsController {
 
     @Get('smile-frequency')
     @UseGuards(JwtAuthGuard)
-    async getSmileFrequency(@Request() request) {
+    async getSmileFrequencyStatistics(@Request() request) {
         return `the smile frequency for ${request.userId}`;
     }
 
