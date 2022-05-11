@@ -23,7 +23,7 @@ jobs:
         source: "."
         target: "/root/tilt-server"
         
-    - name: Executing remote command
+    - name: Run docker-compose up
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.HOST }}
@@ -32,4 +32,4 @@ jobs:
         KEY: ${{ secrets.SSH_KEY }}
         script: | 
           cd /root/tilt-server &&
-          /usr/local/bin/docker-compose --profile prod up -d --no-deps --build api
+          docker-compose --profile prod up -d --build api
