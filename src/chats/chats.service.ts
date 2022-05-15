@@ -15,12 +15,14 @@ export class ChatsService {
     async createChat(userIds: [string, string]): Promise<Chat> {
         const chatId = await this.getUsersChat(userIds);
         if (chatId) {
-            throw new BadRequestException('chats with this users already exists');
+            throw new BadRequestException('chat with this user already exists');
         }
-        const users = await Promise.all(userIds.map(async (userId: string) => (
-            this.usersService.getUserEntityById(userId)
-        )));
-        debugger
+        const users = await Promise.all(
+            userIds.map(async (userId: string) =>
+                this.usersService.getUserEntityById(userId),
+            ),
+        );
+        debugger;
         const chat = this.chatsRepository.create();
         chat.members = users;
         return await this.chatsRepository.save(chat);
@@ -37,26 +39,33 @@ export class ChatsService {
         return chat[0]?.chatsId;
     }
 
-    async getUserChats (userId: string): Promise<string[]>{
+    async getUserChats(userId: string): Promise<string[]> {
         const query = `SELECT cm."chatsId" FROM chats_members_users cm
             JOIN chats c ON cm."chatsId" = c."id"
-            WHERE cm."usersId" = '${userId}'`
-        const chatIds: { chatsId: string }[] = await this.chatsRepository.query(query);
+            WHERE cm."usersId" = '${userId}'`;
+        const chatIds: { chatsId: string }[] = await this.chatsRepository.query(
+            query,
+        );
         return chatIds.map((chatId) => chatId.chatsId);
-    };
+    }
 
     async getUserCollocators(userId: string): Promise<User['id'][]> {
         const query = `SELECT cm1."usersId" FROM chats_members_users cm1
             JOIN chats_members_users cm2 ON cm1."chatsId" = cm2."chatsId"
-            WHERE cm2."usersId" = '${userId}' AND cm1."usersId" != '${userId}'`
-        const collocators: { usersId: string }[] =  await this.chatsRepository.query(query);
+            WHERE cm2."usersId" = '${userId}' AND cm1."usersId" != '${userId}'`;
+        const collocators: { usersId: string }[] =
+            await this.chatsRepository.query(query);
         return collocators.map((collocator) => collocator.usersId);
     }
 
-    async getChatCollocator(chatId: string, userId: string): Promise<User['id']> {
+    async getChatCollocator(
+        chatId: string,
+        userId: string,
+    ): Promise<User['id']> {
         const query = `SELECT cm."usersId" FROM chats_members_users cm
                 WHERE cm."chatsId" = '${chatId}' AND cm."usersId" != '${userId}'`;
-        const collocator: [ { usersId: string } ] = await this.chatsRepository.query(query);
+        const collocator: [{ usersId: string }] =
+            await this.chatsRepository.query(query);
         return collocator[0].usersId;
     }
 }

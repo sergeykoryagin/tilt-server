@@ -1,4 +1,3 @@
-
 export class UserInfoDto {
     id: string;
     login: string;

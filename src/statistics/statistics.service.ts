@@ -1,39 +1,61 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { WeekdayDistributionResult } from 'src/interfaces/weekday-distribution-result';
 import { Message } from 'src/messages/messages.model';
 import { Repository } from 'typeorm';
+import { EmotionDistributionWithUserDto } from './dto/emotion-distribution-with-user.dto';
+import { EmotionDistributionDto } from './dto/emotion-distribution.dto';
+import { WeekdayDistributionDto } from './dto/weekday-distribution.dto';
+import { convertToWeekdayDto } from './utils/convert-to-weekday-dto';
+import { createDistributionStatisticsQuery } from './utils/create-distribution-statistics-query';
+import { createUserISentMostMessagesQuery } from './utils/create-user-i-sent-most-messages-query';
+import { createWeekdayDestributionQuery } from './utils/create-weekday-distrubution-query';
 
 @Injectable()
 export class StatisticsService {
-    constructor(@InjectRepository(Message) private messageRepository: Repository<Message>) {}
+    constructor(
+        @InjectRepository(Message)
+        private messageRepository: Repository<Message>,
+    ) {}
 
-    async getTodayStatistics(userId: string) {
-        const query = `select "isSmiling", count(*) from messages
-        where "userId" = '${userId}'
-        and date("createdAt") = CURRENT_DATE
-        group by "isSmiling"`;
-        const res = await this.messageRepository.query(query);
-        console.log(res);
-        return res;
+    async getTodayStatistics(userId: string): Promise<EmotionDistributionDto> {
+        const query = createDistributionStatisticsQuery(userId, 'day');
+        return (await this.messageRepository.query(query))[0];
     }
 
-    async getMonthStatistics(userId: string) {
+    async getMonthStatistics(userId: string): Promise<EmotionDistributionDto> {
+        const query = createDistributionStatisticsQuery(userId, 'month');
+        return (await this.messageRepository.query(query))[0];
     }
 
-    async getWeekdayWithMostSmilingStatistics(userId: string) {
-
+    async getWeekdayWithMostSmilingStatistics(
+        userId: string,
+    ): Promise<WeekdayDistributionDto> {
+        const query = createWeekdayDestributionQuery(userId);
+        const distribution: Array<WeekdayDistributionResult> =
+            await this.messageRepository.query(query);
+        const weekdayDistributionDto = convertToWeekdayDto(distribution);
+        return weekdayDistributionDto;
     }
 
-    async getSmileFrequency(userId: string) {
-
+    async getTotalDistribution(
+        userId: string,
+    ): Promise<EmotionDistributionDto> {
+        const query = createDistributionStatisticsQuery(userId, 'total');
+        return (await this.messageRepository.query(query))[0];
     }
 
-    async getUserISentTheMostMessages(userId: string) {
-
+    async getUserISentTheMostMessages(
+        userId: string,
+    ): Promise<EmotionDistributionWithUserDto> {
+        const query = createUserISentMostMessagesQuery(userId);
+        return (await this.messageRepository.query(query))[0];
     }
 
-    async getUserWhoSentTheMostMessages(userId: string) {
-
+    async getUserWhoSentTheMostMessages(
+        userId: string,
+    ): Promise<EmotionDistributionWithUserDto> {
+        const query = createUserISentMostMessagesQuery(userId);
+        return (await this.messageRepository.query(query))[0];
     }
-
 }

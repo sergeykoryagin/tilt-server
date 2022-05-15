@@ -5,7 +5,6 @@ import { Message } from 'src/messages/messages.model';
 import { StatisticsController } from './statistics.controller';
 import { StatisticsService } from './statistics.service';
 
-
 @Module({
     controllers: [StatisticsController],
     providers: [StatisticsService],

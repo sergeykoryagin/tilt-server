@@ -3,6 +3,6 @@ export interface MessageDto {
     text: string;
     userId: string;
     createdAt: string;
-    isRead: boolean
+    isRead: boolean;
     isSmiling: boolean;
 }

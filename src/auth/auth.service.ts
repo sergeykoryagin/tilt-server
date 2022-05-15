@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+    BadRequestException,
+    Injectable,
+    UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { AuthResponseDto } from './dto/auth-response.dto';
@@ -11,11 +15,17 @@ import { UsersService } from '../users/users.service';
 export class AuthService {
     constructor(
         private usersService: UsersService,
-        private jwtService: JwtService
+        private jwtService: JwtService,
     ) {}
 
-    async signIn({ login, password }: AuthCredentialsDto): Promise<AuthResponseDto> {
-        const user = await this.usersService.validateUserPassword(login, password);
+    async signIn({
+        login,
+        password,
+    }: AuthCredentialsDto): Promise<AuthResponseDto> {
+        const user = await this.usersService.validateUserPassword(
+            login,
+            password,
+        );
 
         if (!user) {
             throw new BadRequestException('Invalid login or password');
@@ -29,10 +39,15 @@ export class AuthService {
         return AuthService.buildAuthResponseDto(tokenPair, user);
     }
 
-    async signUp({ login, password }: AuthCredentialsDto): Promise<AuthResponseDto> {
+    async signUp({
+        login,
+        password,
+    }: AuthCredentialsDto): Promise<AuthResponseDto> {
         let user = await this.usersService.findByLogin(login);
         if (user) {
-            throw new BadRequestException('User with this login already exists');
+            throw new BadRequestException(
+                'User with this login already exists',
+            );
         }
 
         user = await this.usersService.createUser({ login, password });
@@ -48,25 +63,34 @@ export class AuthService {
     async authMe(refreshToken: string): Promise<AuthResponseDto> {
         let tokenPayload: TokenPayload;
         try {
-            tokenPayload = this.jwtService.verify<TokenPayload>(refreshToken,{
+            tokenPayload = this.jwtService.verify<TokenPayload>(refreshToken, {
                 secret: process.env.JWT_REFRESH_TOKEN_SECRET,
                 maxAge: process.env.JWT_REFRESH_TOKEN_EXPIRATION_TIME,
             });
         } catch {
             throw new UnauthorizedException();
         }
-        const user = await this.usersService.validateRefreshToken(refreshToken, tokenPayload.userId);
+        const user = await this.usersService.validateRefreshToken(
+            refreshToken,
+            tokenPayload.userId,
+        );
         if (!user) {
             throw new UnauthorizedException();
         }
 
         const accessToken = this.createAccessToken(user.id, user.login);
         const newRefreshToken = this.createRefreshToken(user.id, user.login);
-        await this.usersService.setCurrentRefreshToken(newRefreshToken, user.id);
+        await this.usersService.setCurrentRefreshToken(
+            newRefreshToken,
+            user.id,
+        );
 
-        const tokenPair = AuthService.buildTokenPair(accessToken, newRefreshToken);
+        const tokenPair = AuthService.buildTokenPair(
+            accessToken,
+            newRefreshToken,
+        );
         return AuthService.buildAuthResponseDto(tokenPair, user);
-    };
+    }
 
     async signOut(userId: string): Promise<void> {
         const user = this.usersService.findById(userId);
@@ -74,7 +98,7 @@ export class AuthService {
             throw new BadRequestException('Invalid token');
         }
         await this.usersService.setCurrentRefreshToken(null, userId);
-    };
+    }
 
     async updatePassword(userId: string, password: string): Promise<void> {
         await this.usersService.updateUserPassword(userId, password);
@@ -96,11 +120,19 @@ export class AuthService {
         });
     }
 
-    private static buildTokenPair = (accessToken: string, refreshToken: string): TokenPairDto => ({
-        accessToken, refreshToken
+    private static buildTokenPair = (
+        accessToken: string,
+        refreshToken: string,
+    ): TokenPairDto => ({
+        accessToken,
+        refreshToken,
     });
 
-    private static buildAuthResponseDto = (tokenPair: TokenPairDto, userInfo: UserInfoDto): AuthResponseDto => ({
-        tokenPair, userInfo
+    private static buildAuthResponseDto = (
+        tokenPair: TokenPairDto,
+        userInfo: UserInfoDto,
+    ): AuthResponseDto => ({
+        tokenPair,
+        userInfo,
     });
 }

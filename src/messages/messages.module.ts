@@ -7,7 +7,11 @@ import { MessagesService } from './messages.service';
 
 @Module({
     providers: [MessagesService],
-    imports: [TypeOrmModule.forFeature([Message]), forwardRef(() => ChatsModule), UsersModule],
+    imports: [
+        TypeOrmModule.forFeature([Message]),
+        forwardRef(() => ChatsModule),
+        UsersModule,
+    ],
     exports: [MessagesService],
 })
 export class MessagesModule {}
