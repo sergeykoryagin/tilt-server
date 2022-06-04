@@ -6,4 +6,7 @@ docker-compose.yml
 README.md
 
 # Node Files #
-node_modules
+
+node_modules/
+dist/
+
