@@ -2,12 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { WeekdayDistributionResult } from 'src/interfaces/weekday-distribution-result';
 import { Message } from 'src/messages/messages.model';
+import { createUserWhoSentMostMessagesQuery } from 'src/statistics/utils/create-user-who-sent-most-messages-query';
 import { Repository } from 'typeorm';
 import { EmotionDistributionWithUserDto } from './dto/emotion-distribution-with-user.dto';
 import { EmotionDistributionDto } from './dto/emotion-distribution.dto';
 import { WeekdayDistributionDto } from './dto/weekday-distribution.dto';
 import { convertToWeekdayDto } from './utils/convert-to-weekday-dto';
 import { createDistributionStatisticsQuery } from './utils/create-distribution-statistics-query';
+import { createStatisticsByUserQuery } from './utils/create-statistics-by-user-query';
 import { createUserISentMostMessagesQuery } from './utils/create-user-i-sent-most-messages-query';
 import { createWeekdayDestributionQuery } from './utils/create-weekday-distrubution-query';
 
@@ -34,8 +36,7 @@ export class StatisticsService {
         const query = createWeekdayDestributionQuery(userId);
         const distribution: Array<WeekdayDistributionResult> =
             await this.messageRepository.query(query);
-        const weekdayDistributionDto = convertToWeekdayDto(distribution);
-        return weekdayDistributionDto;
+        return convertToWeekdayDto(distribution);
     }
 
     async getTotalDistribution(
@@ -55,7 +56,15 @@ export class StatisticsService {
     async getUserWhoSentTheMostMessages(
         userId: string,
     ): Promise<EmotionDistributionWithUserDto> {
-        const query = createUserISentMostMessagesQuery(userId);
+        const query = createUserWhoSentMostMessagesQuery(userId);
+        return (await this.messageRepository.query(query))[0];
+    }
+
+    async getStatisticsByUser(
+        myId: string,
+        userId: string,
+    ): Promise<EmotionDistributionDto> {
+        const query = createStatisticsByUserQuery(myId, userId);
         return (await this.messageRepository.query(query))[0];
     }
 }

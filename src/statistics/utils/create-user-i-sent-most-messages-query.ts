@@ -1,12 +1,14 @@
 export const createUserISentMostMessagesQuery = (userId: string): string => {
     return `
     with currentUser as (
-        select coalesce(cmu."usersId", NULL) as userId 
+        select coalesce(cmu."usersId", NULL) as userId,
+            coalesce(u."login", NULL) as login
         from messages m
             join chats_members_users cmu on cmu."chatsId" = m."chatId"
+            join users u on cmu."usersId" = u."id"
         where m."userId" = '${userId}'
         and cmu."usersId" != '${userId}'
-        GROUP BY cmu."usersId"
+        GROUP BY userId, login
         ORDER BY count(*) DESC
         limit 1
     ),
@@ -25,6 +27,7 @@ export const createUserISentMostMessagesQuery = (userId: string): string => {
         where "isSmiling" = false
     ) select
         userId,
+        login,
         CAST(coalesce(smiling, '0') AS integer) as smiling,
         CAST(coalesce(neutral, '0') AS integer) as neutral
     from smilingCount, neutralCount, currentUser;

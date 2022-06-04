@@ -37,7 +37,7 @@ services:
       - 9229
     volumes:
       - ./.env:/app/.env
-      - ./app/node_modules/
+      - /app/node_modules/
       - ./src:/app/src/
     depends_on:
       - postgres
@@ -53,10 +53,12 @@ services:
     expose:
       - 6543
     environment:
-      PG_DATA: /var/lib/postgresql/data
-      POSTGRES_DB: "tilt"
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "postgres"
+      - TZ=Europe/Moscow
+      - PGTZ=Europe/Moscow
+      - PG_DATA=/var/lib/postgresql/data
+      - POSTGRES_DB=tilt
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
     restart: always
     volumes:
       - pgdata:/var/lib/postgresql/data

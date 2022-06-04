@@ -1,4 +1,4 @@
-import { Controller, Get, Request, UseGuards } from '@nestjs/common';
+import { Controller, Get, Param, Request, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { StatisticsService } from './statistics.service';
 
@@ -35,12 +35,28 @@ export class StatisticsController {
     @Get('user-i-sent')
     @UseGuards(JwtAuthGuard)
     async getUserISentTheMostMessages(@Request() request) {
-        return this.statisticsService.getMonthStatistics(request.userId);
+        return this.statisticsService.getUserISentTheMostMessages(
+            request.userId,
+        );
     }
 
     @Get('user-who-sent')
     @UseGuards(JwtAuthGuard)
     async getUserWhoSentTheMostMessages(@Request() request) {
-        return this.statisticsService.getMonthStatistics(request.userId);
+        return this.statisticsService.getUserWhoSentTheMostMessages(
+            request.userId,
+        );
+    }
+
+    @Get('user/:userId')
+    @UseGuards(JwtAuthGuard)
+    async getTotalStatisticsForUser(
+        @Request() request,
+        @Param('userId') userId: string,
+    ) {
+        return this.statisticsService.getStatisticsByUser(
+            request.userId,
+            userId,
+        );
     }
 }
