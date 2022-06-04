@@ -10,12 +10,17 @@ import { Repository } from 'typeorm';
 @Injectable()
 export class MessagesService {
     constructor(
-        @InjectRepository(Message) private messageRepository: Repository<Message>,
+        @InjectRepository(Message)
+        private messageRepository: Repository<Message>,
         private chatsService: ChatsService,
         private usersService: UsersService,
     ) {}
 
-    async addMessage(messageInfo: MessageInfo, creatorId: string, chatId: string): Promise<MessageDto> {
+    async addMessage(
+        messageInfo: MessageInfo,
+        creatorId: string,
+        chatId: string,
+    ): Promise<MessageDto> {
         const user = await this.usersService.getUserEntityById(creatorId);
         let message = this.messageRepository.create({
             isSmiling: messageInfo.isSmiling,
@@ -30,7 +35,9 @@ export class MessagesService {
     async readMessage(messageId: string): Promise<MessageDto> {
         let message = await this.messageRepository.findOne(messageId);
         if (!message) {
-            throw new BadRequestException(`message with this id doesn't exists`);
+            throw new BadRequestException(
+                `message with this id doesn't exists`,
+            );
         }
         message.isRead = true;
         message = await this.messageRepository.save(message);
@@ -38,7 +45,10 @@ export class MessagesService {
     }
 
     async getChatMessages(chatId: string): Promise<MessageDto[]> {
-        const messages = await this.messageRepository.find({ relations: ['user'], where: { chat: chatId } });
+        const messages = await this.messageRepository.find({
+            relations: ['user'],
+            where: { chat: chatId },
+        });
         return messages.map(MessagesService.buildMessageDto);
     }
 
@@ -57,5 +67,4 @@ export class MessagesService {
             userId: user?.id,
         };
     };
-
 }

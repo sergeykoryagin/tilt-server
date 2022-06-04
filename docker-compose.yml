@@ -30,11 +30,14 @@ services:
     ports:
       - "4001:4001"
       - "16000:16000"
+      - "9229:9229"
     expose:
       - 4001
       - 16000
+      - 9229
     volumes:
       - ./.env:/app/.env
+      - /app/node_modules/
       - ./src:/app/src/
     depends_on:
       - postgres
@@ -46,14 +49,16 @@ services:
       - dev
       - prod
     ports:
-      - "5432:5432"
+      - "6543:5432"
     expose:
-      - 5432
+      - 6543
     environment:
-      PG_DATA: /var/lib/postgresql/data
-      POSTGRES_DB: "tilt"
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "postgres"
+      - TZ=Europe/Moscow
+      - PGTZ=Europe/Moscow
+      - PG_DATA=/var/lib/postgresql/data
+      - POSTGRES_DB=tilt
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
     restart: always
     volumes:
       - pgdata:/var/lib/postgresql/data

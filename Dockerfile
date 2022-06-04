@@ -1,16 +1,15 @@
-FROM node:16-alpine as development
+FROM node:16-alpine as build
 WORKDIR /app
 COPY package.json ./
 COPY yarn.lock ./
 RUN yarn install
 COPY . .
-RUN yarn run build
+RUN yarn build
 
-FROM node:16-alpine as production
+FROM node:16-alpine
 WORKDIR /app
 COPY package.json ./
 COPY yarn.lock ./
 RUN yarn install --prod
-COPY . .
-COPY --from=development /app/dist ./dist
-CMD ["node", "dist/main"]
+COPY --from=build /app/dist ./dist
+CMD ["yarn", "start:prod"]

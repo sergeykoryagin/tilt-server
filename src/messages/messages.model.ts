@@ -24,6 +24,10 @@ export class Message {
     @Column({ type: 'boolean', nullable: false, default: false })
     isRead: boolean;
 
-    @Column({ type: 'timestamp', nullable: false, default: () => 'CURRENT_TIMESTAMP' })
+    @Column({
+        type: 'timestamp',
+        nullable: false,
+        default: () => 'CURRENT_TIMESTAMP',
+    })
     createdAt: string;
 }

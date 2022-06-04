@@ -9,7 +9,7 @@ import {
     Request,
     UploadedFile,
     UseGuards,
-    UseInterceptors
+    UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -30,15 +30,17 @@ export class UsersController {
     }
 
     @Post()
-    async createUser(@Body() createUserDto: CreateUserDto): Promise<UserInfoDto> {
+    async createUser(
+        @Body() createUserDto: CreateUserDto,
+    ): Promise<UserInfoDto> {
         return this.usersService.createUser(createUserDto);
-    };
+    }
 
     @Put()
     @UseGuards(JwtAuthGuard)
     async updateUser(@Body() updateUserDto: UpdateUserDto, @Request() request) {
         return this.usersService.updateUser(request.userId, updateUserDto);
-    };
+    }
 
     @Get('search')
     @UseGuards(JwtAuthGuard)
@@ -46,9 +48,12 @@ export class UsersController {
         @Query('pageSize') pageSize: number,
         @Query('pageNumber') pageNumber: number,
         @Query('searchString') searchString: string,
-        @Request() request
+        @Request() request,
     ): Promise<UserInfoDto[]> {
-        return this.usersService.searchUsers(request.userId, searchString,{ pageNumber: +pageNumber, pageSize: +pageSize });
+        return this.usersService.searchUsers(request.userId, searchString, {
+            pageNumber: +pageNumber,
+            pageSize: +pageSize,
+        });
     }
 
     @Put('avatar')
@@ -75,9 +80,13 @@ export class UsersController {
 
     @Put('permissions')
     @UseGuards(JwtAuthGuard)
-    updateDataSendPermissions(@Body() dataSendPermissionsDto: DataSendPermissionsDto, @Request() request) {
-        return this.usersService.updateDataSendPermissions(request.userId, dataSendPermissionsDto.hasDataSendPermissions);
+    updateDataSendPermissions(
+        @Body() dataSendPermissionsDto: DataSendPermissionsDto,
+        @Request() request,
+    ) {
+        return this.usersService.updateDataSendPermissions(
+            request.userId,
+            dataSendPermissionsDto.hasDataSendPermissions,
+        );
     }
-
-
 }

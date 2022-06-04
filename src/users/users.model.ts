@@ -1,6 +1,12 @@
 import { Chat } from '../chats/chats.model';
 import { Message } from '../messages/messages.model';
-import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+    Column,
+    Entity,
+    ManyToMany,
+    OneToMany,
+    PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity({
     name: 'users',
@@ -21,7 +27,11 @@ export class User {
     @Column({ type: 'bytea', nullable: true })
     avatar?: ArrayBuffer;
 
-    @Column({ type: 'timestamp', nullable: false, default: () => 'CURRENT_TIMESTAMP' })
+    @Column({
+        type: 'timestamp',
+        nullable: false,
+        default: () => 'CURRENT_TIMESTAMP',
+    })
     wasOnline: string;
 
     @Column({ type: String, nullable: true, length: 120 })
@@ -34,5 +44,5 @@ export class User {
     chats: Chat[];
 
     @OneToMany(() => Message, (message) => message.user)
-    messages: Message[]
+    messages: Message[];
 }

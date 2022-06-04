@@ -9,13 +9,10 @@ import { AuthService } from './auth.service';
     controllers: [AuthController],
     providers: [AuthService],
     imports: [
-            ConfigModule,
-            forwardRef(() => UsersModule),
-            JwtModule.register({}),
+        ConfigModule,
+        forwardRef(() => UsersModule),
+        JwtModule.register({}),
     ],
-    exports: [
-        AuthService,
-        JwtModule,
-    ],
+    exports: [AuthService, JwtModule],
 })
 export class AuthModule {}

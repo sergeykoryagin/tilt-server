@@ -27,9 +27,7 @@ import { StatisticsModule } from './statistics/statistics.module';
         MessagesModule,
         StatisticsModule,
     ],
-    exports: [
-        ConfigModule,
-    ],
+    exports: [ConfigModule],
     controllers: [],
     providers: [AppGateway],
 })
